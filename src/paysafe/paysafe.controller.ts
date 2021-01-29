@@ -121,7 +121,7 @@ export class PaysafeController {
 						}
 						console.log("-----result------",result);
 						var xhttp = new XMLHttpRequest();
-						xhttp.open("POST", "http://gagan1.ngrok.ionicfirebaseapp.com/api/paysafe/process/payment", true);
+						xhttp.open("POST", "https://young-tundra-19037.herokuapp.com/api/paysafe/process/payment", true);
 						xhttp.setRequestHeader('Content-type', 'application/json; charset=utf-8');
 						xhttp.send(JSON.stringify(result));
 						
