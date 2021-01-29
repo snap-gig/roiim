@@ -124,11 +124,13 @@ export class PaysafeController {
 						xhttp.open("POST", "https://roiim-paysafe00.herokuapp.com/api/paysafe/process/payment", true);
 						xhttp.setRequestHeader('Content-type', 'application/json; charset=utf-8');
 						xhttp.send(JSON.stringify(result));
-						
+						instance.showSuccessScreen("Your payment is successful!");
+						instance.close();
 						// make AJAX call to Payments API
 					} else {
 						console.error(error);
 						// Handle the error
+						instance.showFailureScreen("Payment was declined. Try again with the same or another payment method.");
 					}
 				}, function (stage, expired) {
 					switch (stage) {
