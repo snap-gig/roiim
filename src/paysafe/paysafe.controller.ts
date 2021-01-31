@@ -126,27 +126,25 @@ export class PaysafeController {
 						instance.showFailureScreen("Payment was declined. Try again with the same or another payment method.");
 					}
 				}, function (stage, expired) {
-
-					window.alert("Hello! I am an alert box!!");
 					if (expired) {
+						window.alert("Session Expired");
 						//case when  payment handle expires without user completing the payment
 						// this.paymentResponse.status = "failed";
 						// this.paymentResponse.message = "Session Expired";
 						// this.promiseReject(this.paymentResponse);
-						return "failed";
 					  } else if (this.paymentResponse.status !== "success") {
+						window.alert("Payment Closed Unexpectedly By The User!");
 						//case when user closes the iframe before completing the payment
-						this.paymentResponse.status = "failed";
-						this.paymentResponse.message = "Payment Closed Unexpectedly By The User!";
-						this.promiseReject(this.paymentResponse);
+						// this.paymentResponse.status = "failed";
+						// this.paymentResponse.message = "Payment Closed Unexpectedly By The User!";
+						// this.promiseReject(this.paymentResponse);
 					  }
-					  this.promiseResolve();
 					switch (stage) {
-						case "PAYMENT_HANDLE_NOT_CREATED": // Handle the scenario
-						case "PAYMENT_HANDLE_CREATED": // Handle the scenario
-						case "PAYMENT_HANDLE_REDIRECT": // Handle the scenario
-						case "PAYMENT_HANDLE_PAYABLE": // Handle the scenario
-						default: // Handle the scenario
+						case "PAYMENT_HANDLE_NOT_CREATED": window.alert("Payment Not created");
+						case "PAYMENT_HANDLE_CREATED": window.alert("Payment handle created")
+						case "PAYMENT_HANDLE_REDIRECT": window.alert("Payment handle redirect")
+						case "PAYMENT_HANDLE_PAYABLE": window.alert("Payment handle payable")
+						default: window.alert("Payment Closed Unexpectedly By The User!");
 					}
 				});
 			}
