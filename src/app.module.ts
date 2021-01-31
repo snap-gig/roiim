@@ -4,15 +4,18 @@ import { join } from 'path';
 import { PaysafeModule } from './paysafe/paysafe.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PaysafeController } from './paysafe/paysafe.controller';
+import { ConfigModule } from '@nestjs/config';
+
 
 @Module({
 	imports: [
-		PaysafeModule,
-		MongooseModule.forRoot('mongodb+srv://gagan:LuLVMUpqs1Oj8bmS@cluster0.2cspj.mongodb.net/Roiim?retryWrites=true&w=majority'),
+		ConfigModule.forRoot(),
+		MongooseModule.forRoot(process.env.MONGO_DB_URL ?? "mongodb+srv://gagan:LuLVMUpqs1Oj8bmS@cluster0.2cspj.mongodb.net/Roiim?retryWrites=true&w=majority"),
 		ServeStaticModule.forRoot({
 			rootPath: join(__dirname, '..', 'client'),
 			exclude: ['/api*'],
 		}),
+		PaysafeModule,
 	],
 	controllers: [PaysafeController],
 })

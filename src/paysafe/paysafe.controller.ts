@@ -1,12 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { Body, Controller, Post } from '@nestjs/common';
 import { PaysafeService } from './paysafe.service';
-// import request2 = require('async-request');
-// import axios = require('axios');
-// import { fetch } from 'node-fetch'
 import { v4 as uuidv4 } from 'uuid';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-// const fetch = require("node-fetch");
 const axios = require('axios')
 
 @Controller('paysafe')
@@ -15,12 +10,10 @@ export class PaysafeController {
 
 	@Post('/login')
 	async startPayment(@Body() userData: any) {
-		console.log("----user----", userData);
-		let user = await this.paysafeService.getUserByEmail(userData.email);
-		console.log("-----userdetail------", user)
-		if (!user) { user = await this.paysafeService.createUser(userData) };
 		let paymentRes;
 		let singleUseCustomerToken;
+		let user = await this.paysafeService.getUserByEmail(userData.email);
+		if (!user) { user = await this.paysafeService.createUser(userData) };
 		if (user.paysafeCustomerId) {
 			const config = {
 				method: 'post',
@@ -33,7 +26,6 @@ export class PaysafeController {
 			};
 			paymentRes = await axios(config);
 			singleUseCustomerToken = paymentRes.data.singleUseCustomerToken;
-			console.log("-----payment REs------", paymentRes.data)
 		}
 
 		const userD = {
@@ -121,11 +113,12 @@ export class PaysafeController {
 						}
 						console.log("-----result------",result);
 						var xhttp = new XMLHttpRequest();
-						xhttp.open("POST", "https://roiim-paysafe00.herokuapp.com/api/paysafe/process/payment", true);
+						xhttp.open("POST", "${process.env.API_URL}/api/paysafe/process/payment", true);
 						xhttp.setRequestHeader('Content-type', 'application/json; charset=utf-8');
 						xhttp.send(JSON.stringify(result));
+						
 						instance.showSuccessScreen("Your payment is successful!");
-						instance.close();
+
 						// make AJAX call to Payments API
 					} else {
 						console.error(error);
@@ -133,6 +126,21 @@ export class PaysafeController {
 						instance.showFailureScreen("Payment was declined. Try again with the same or another payment method.");
 					}
 				}, function (stage, expired) {
+
+					window.alert("Hello! I am an alert box!!");
+					if (expired) {
+						//case when  payment handle expires without user completing the payment
+						// this.paymentResponse.status = "failed";
+						// this.paymentResponse.message = "Session Expired";
+						// this.promiseReject(this.paymentResponse);
+						return "failed";
+					  } else if (this.paymentResponse.status !== "success") {
+						//case when user closes the iframe before completing the payment
+						this.paymentResponse.status = "failed";
+						this.paymentResponse.message = "Payment Closed Unexpectedly By The User!";
+						this.promiseReject(this.paymentResponse);
+					  }
+					  this.promiseResolve();
 					switch (stage) {
 						case "PAYMENT_HANDLE_NOT_CREATED": // Handle the scenario
 						case "PAYMENT_HANDLE_CREATED": // Handle the scenario
