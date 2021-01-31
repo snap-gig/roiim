@@ -10,7 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 @Module({
 	imports: [
 		ConfigModule.forRoot(),
-		MongooseModule.forRoot(process.env.MONGO_DB_URL ?? "mongodb+srv://gagan:LuLVMUpqs1Oj8bmS@cluster0.2cspj.mongodb.net/Roiim?retryWrites=true&w=majority"),
+		MongooseModule.forRoot(process.env.MONGO_DB_URL),
 		ServeStaticModule.forRoot({
 			rootPath: join(__dirname, '..', 'client'),
 			exclude: ['/api*'],
